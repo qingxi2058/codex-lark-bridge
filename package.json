@@ -1,0 +1,34 @@
+{
+  "name": "codex-lark-bridge",
+  "version": "0.1.0",
+  "description": "Run OpenAI Codex from Feishu/Lark messages through lark-channel-bridge.",
+  "type": "module",
+  "bin": {
+    "codex-lark-bridge": "bin/codex-lark-bridge.mjs",
+    "codex-feishu-upload": "bin/codex-feishu-upload.mjs"
+  },
+  "files": [
+    "adapters",
+    "bin",
+    "docs",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node bin/codex-lark-bridge.mjs --help && node adapters/claude --version && node bin/codex-feishu-upload.mjs --help"
+  },
+  "keywords": [
+    "codex",
+    "feishu",
+    "lark",
+    "lark-channel-bridge",
+    "bot",
+    "cli"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

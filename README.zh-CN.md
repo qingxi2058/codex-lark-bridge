@@ -1,0 +1,100 @@
+# codex-lark-bridge
+
+把 OpenAI Codex 接到飞书/Lark。
+
+这个项目基于 `lark-channel-bridge` 做了一层适配：飞书消息进来后，不再交给 Claude Code，而是交给本地的 `codex` 命令。桥接包会在运行时调用，不打包进这个仓库。
+
+## 能做什么
+
+- 一条命令启动 Codex 飞书 bot。
+- 首次运行扫码创建/绑定飞书应用。
+- 私聊 bot 或在群里 @bot，就能让 Codex 工作。
+- 和 Claude Code 的飞书 bot 分开配置，不互相抢。
+- 附带上传命令，可以把文字、图片、文件发回飞书。
+
+## 前置条件
+
+- Node.js 20 或更高版本
+- 本机已经安装并登录 Codex CLI
+- 首次绑定时需要用飞书/Lark 扫码
+
+先确认 Codex 可用：
+
+```bash
+codex --version
+```
+
+## 一键启动
+
+发布到 npm 后：
+
+```bash
+npx -y codex-lark-bridge run
+```
+
+从 GitHub 直接运行：
+
+```bash
+npx -y github:你的GitHub用户名/codex-lark-bridge run
+```
+
+第一次运行会出现二维码。用飞书扫码，按提示创建或绑定 bot。完成后，在飞书里私聊这个 bot 就可以用了。
+
+## 常用命令
+
+启动：
+
+```bash
+codex-lark-bridge run
+```
+
+使用自定义配置：
+
+```bash
+codex-lark-bridge run --config ~/.lark-channel/my-codex-bot.json
+```
+
+查看运行中的 bridge：
+
+```bash
+codex-lark-bridge ps
+```
+
+停止某个进程：
+
+```bash
+codex-lark-bridge kill 1
+```
+
+## 上传结果到飞书
+
+发文字：
+
+```bash
+codex-lark-bridge upload --text "已完成"
+```
+
+发图片：
+
+```bash
+codex-lark-bridge upload --image ./screenshot.png --text "预览图"
+```
+
+发到指定聊天：
+
+```bash
+codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
+```
+
+如果不传 `--chat-id`，默认发到 Codex bot 最近收到消息的那个聊天。
+
+## 注意
+
+- Codex 在你的本机运行，不是云端托管。
+- 不要让 Claude Code 和 Codex 复用同一个飞书应用。
+- 默认配置文件是 `~/.lark-channel/codex-config.json`。
+- 群聊里一般需要 @bot 才会响应。
+
+## License
+
+MIT

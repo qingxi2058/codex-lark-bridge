@@ -1,0 +1,116 @@
+#!/usr/bin/env node
+import { spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
+
+const argv = process.argv.slice(2);
+
+if (argv.includes("--version") || argv.includes("-v")) {
+  console.log("Claude Code adapter for Codex");
+  process.exit(0);
+}
+
+function takeValue(flags) {
+  for (let i = 0; i < argv.length; i += 1) {
+    if (flags.includes(argv[i])) return argv[i + 1] ?? "";
+  }
+  return "";
+}
+
+const prompt = takeValue(["-p", "--print"]) || "";
+const systemPrompt = takeValue(["--append-system-prompt"]);
+const sessionId = takeValue(["--resume"]);
+const model = takeValue(["--model"]);
+const fullPrompt = [systemPrompt, prompt].filter(Boolean).join("\n\n");
+
+if (!prompt) {
+  console.error("codex adapter: missing prompt");
+  process.exit(2);
+}
+
+const codexArgs = sessionId
+  ? ["exec", "resume", "--json", "--skip-git-repo-check", "-c", "approval_policy=\"never\"", "-c", "sandbox_mode=\"workspace-write\""]
+  : ["exec", "--json", "--skip-git-repo-check", "-c", "approval_policy=\"never\"", "-c", "sandbox_mode=\"workspace-write\""];
+
+if (model) codexArgs.push("-m", model);
+if (sessionId) codexArgs.push(sessionId);
+codexArgs.push(fullPrompt);
+
+const child = spawn("codex", codexArgs, {
+  cwd: process.cwd(),
+  env: process.env,
+  stdio: ["ignore", "pipe", "pipe"],
+});
+
+let threadId = sessionId || "";
+let finalText = "";
+let usage = {};
+let emittedInit = false;
+
+function emitInit(id) {
+  if (emittedInit) return;
+  emittedInit = true;
+  process.stdout.write(JSON.stringify({
+    type: "system",
+    subtype: "init",
+    session_id: id,
+    cwd: process.cwd(),
+    model: model || undefined,
+  }) + "\n");
+}
+
+child.stdout.setEncoding("utf8");
+let stdoutBuffer = "";
+child.stdout.on("data", (chunk) => {
+  stdoutBuffer += chunk;
+  let newline = stdoutBuffer.indexOf("\n");
+  while (newline >= 0) {
+    const line = stdoutBuffer.slice(0, newline).trim();
+    stdoutBuffer = stdoutBuffer.slice(newline + 1);
+    newline = stdoutBuffer.indexOf("\n");
+    if (!line) continue;
+    try {
+      const evt = JSON.parse(line);
+      if (evt.type === "thread.started" && evt.thread_id) {
+        threadId = evt.thread_id;
+        emitInit(threadId);
+      }
+      if (evt.type === "item.completed" && evt.item?.type === "agent_message") {
+        finalText += evt.item.text || "";
+      }
+      if (evt.type === "turn.completed" && evt.usage) usage = evt.usage;
+    } catch {
+      // Codex emits JSONL on stdout in --json mode. Ignore stray lines.
+    }
+  }
+});
+
+child.stderr.pipe(process.stderr);
+
+child.on("error", (error) => {
+  console.error(`codex adapter failed to start: ${error.message}`);
+  process.exit(1);
+});
+
+child.on("exit", (code) => {
+  if (finalText) {
+    process.stdout.write(JSON.stringify({
+      type: "assistant",
+      message: {
+        content: [{ type: "text", text: finalText }],
+      },
+    }) + "\n");
+  }
+
+  if (code === 0) {
+    process.stdout.write(JSON.stringify({
+      type: "result",
+      session_id: threadId || sessionId || randomUUID(),
+      usage: {
+        input_tokens: usage.input_tokens,
+        output_tokens: usage.output_tokens,
+      },
+    }) + "\n");
+  }
+
+  process.exit(code ?? 1);
+});
