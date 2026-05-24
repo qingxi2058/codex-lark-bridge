@@ -2,7 +2,9 @@
 
 Use OpenAI Codex from Feishu/Lark messages.
 
-This project wraps [`lark-channel-bridge`](https://www.npmjs.com/package/lark-channel-bridge) with a small adapter so Feishu/Lark messages are sent to the local `codex` CLI instead of Claude Code. The bridge package is launched at runtime, so this repo stays small and does not vendor the bridge.
+This project is a Codex adapter for [`zarazhangrui/feishu-claude-code-bridge`](https://github.com/zarazhangrui/feishu-claude-code-bridge), published on npm as [`lark-channel-bridge`](https://www.npmjs.com/package/lark-channel-bridge).
+
+The upstream project already does the hard Feishu/Lark work: QR binding, streaming cards, per-chat sessions, workspaces, access control, files, and process management. This repo keeps that behavior and only swaps the local agent from Claude Code to OpenAI Codex through a small CLI adapter. The bridge package is launched at runtime, so this repo stays small and does not vendor the bridge.
 
 ## What It Does
 
@@ -34,7 +36,7 @@ npx -y codex-lark-bridge run
 From GitHub:
 
 ```bash
-npx -y github:YOUR_GITHUB_NAME/codex-lark-bridge run
+npx -y github:qingxi2058/codex-lark-bridge run
 ```
 
 The first run opens a QR code setup flow. Scan it with Feishu/Lark, create or select a bot, then message the bot in Feishu/Lark.

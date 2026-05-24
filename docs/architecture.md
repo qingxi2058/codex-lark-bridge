@@ -1,5 +1,9 @@
 # Architecture
 
+This project is intentionally a thin adapter over
+[`zarazhangrui/feishu-claude-code-bridge`](https://github.com/zarazhangrui/feishu-claude-code-bridge),
+published to npm as `lark-channel-bridge`.
+
 `lark-channel-bridge` currently launches a local command named `claude`.
 
 This project prepends `adapters/` to `PATH`, so `lark-channel-bridge` finds
