@@ -41,6 +41,18 @@ npx -y github:qingxi2058/codex-lark-bridge run
 
 The first run opens a QR code setup flow. Scan it with Feishu/Lark, create or select a bot, then message the bot in Feishu/Lark.
 
+## Security First
+
+This bot can run Codex on your local machine. Treat anyone who can message the bot as someone who can ask a local coding agent to read and change files in the selected workspace.
+
+For personal use, bind a dedicated Feishu/Lark bot and keep it private. For any shared workspace, send `/config` in Feishu/Lark and set at least:
+
+- `Admins`: your own `open_id`
+- `Allowed users`: the people who may use the bot
+- `Allowed chats`: the groups where the bot may respond
+
+Do this before adding the bot to a large group.
+
 ## Usage
 
 Run the bridge:
@@ -69,7 +81,7 @@ codex-lark-bridge kill 1
 
 ## Send Results Back To Feishu/Lark
 
-Send text to the latest chat seen by the Codex bot:
+Send text to the latest chat seen in local lark-channel logs:
 
 ```bash
 codex-lark-bridge upload --text "Done."
@@ -87,12 +99,15 @@ Send to a specific chat:
 codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
 ```
 
+If you run both Claude Code and Codex bridges on the same machine, prefer `--chat-id` so the upload target is explicit.
+
 ## Notes
 
 - This is a local bridge. Codex runs on your machine.
 - Do not reuse the same Feishu/Lark app for Claude Code and Codex. Use a separate bot/config.
 - The default config path is `~/.lark-channel/codex-config.json`.
 - Group chats normally require mentioning the bot.
+- Use Feishu/Lark `/config` access control before sharing the bot.
 
 ## License
 

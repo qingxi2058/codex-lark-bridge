@@ -42,6 +42,18 @@ npx -y github:qingxi2058/codex-lark-bridge run
 
 第一次运行会出现二维码。用飞书扫码，按提示创建或绑定 bot。完成后，在飞书里私聊这个 bot 就可以用了。
 
+## 先做安全设置
+
+这个 bot 会在你的本机运行 Codex。能给 bot 发消息的人，本质上就能让一个本地代码 agent 去读和改当前工作区里的文件。
+
+个人使用时，建议绑定一个独立的飞书/Lark bot，不要随便拉进大群。团队或群聊使用时，先在飞书里给 bot 发 `/config`，至少设置：
+
+- `Admins`：你自己的 `open_id`
+- `Allowed users`：允许使用 bot 的人
+- `Allowed chats`：允许响应的群
+
+这些设置完成后，再把 bot 放进多人群。
+
 ## 常用命令
 
 启动：
@@ -88,7 +100,9 @@ codex-lark-bridge upload --image ./screenshot.png --text "预览图"
 codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
 ```
 
-如果不传 `--chat-id`，默认发到 Codex bot 最近收到消息的那个聊天。
+如果不传 `--chat-id`，默认发到本机 lark-channel 日志里最近出现的聊天。
+
+如果同一台机器同时跑 Claude Code 和 Codex 两个 bridge，建议显式传 `--chat-id`，避免发错聊天。
 
 ## 注意
 
@@ -96,6 +110,7 @@ codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
 - 不要让 Claude Code 和 Codex 复用同一个飞书应用。
 - 默认配置文件是 `~/.lark-channel/codex-config.json`。
 - 群聊里一般需要 @bot 才会响应。
+- 分享给别人或拉进群前，先用飞书里的 `/config` 做访问控制。
 
 ## License
 

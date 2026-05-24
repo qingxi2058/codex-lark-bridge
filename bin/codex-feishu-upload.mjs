@@ -34,7 +34,7 @@ Usage:
   codex-lark-bridge upload --file /path/to/report.md --chat-id oc_xxx
 
 Options:
-  --chat-id    Target Feishu chat id. If omitted, uses the latest chat seen by the Codex bot.
+  --chat-id    Target Feishu chat id. If omitted, uses the latest chat in lark-channel logs.
   --text       Plain text message.
   --markdown   Markdown message.
   --image      Local image path to upload and send.
@@ -169,7 +169,7 @@ async function main() {
   }
   const config = JSON.parse(readFileSync(args.config, "utf8"));
   const chatId = args.chatId || latestChatIdFromLog();
-  if (!chatId) throw new Error("missing --chat-id and no recent Codex bot chat found in logs");
+  if (!chatId) throw new Error("missing --chat-id and no recent lark-channel chat found in logs");
   const appId = config.accounts?.app?.id;
   if (!appId) throw new Error("missing app id in config");
   const appSecret = await readSecret(config);
