@@ -2,7 +2,7 @@
 
 把 OpenAI Codex 接到飞书/Lark。
 
-这个项目是 [`zarazhangrui/feishu-claude-code-bridge`](https://github.com/zarazhangrui/feishu-claude-code-bridge) 的 Codex 适配版。它在 npm 上对应的包名是 [`lark-channel-bridge`](https://www.npmjs.com/package/lark-channel-bridge)。
+这个项目是 [`zarazhangrui/feishu-claude-code-bridge`](https://github.com/zarazhangrui/feishu-claude-code-bridge) 的 Codex 适配版。上游桥接包在 npm 上对应的包名是 [`lark-channel-bridge`](https://www.npmjs.com/package/lark-channel-bridge)。
 
 上游项目已经做好了飞书/Lark 侧的核心能力：扫码绑定、流式卡片、按聊天保持会话、工作区切换、权限控制、文件处理和进程管理。这个仓库不重写这些能力，只加一层小适配，把本地 agent 从 Claude Code 换成 OpenAI Codex。桥接包会在运行时调用，不打包进这个仓库。
 
