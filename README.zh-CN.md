@@ -28,16 +28,16 @@ codex --version
 
 ## 一键启动
 
-发布到 npm 后：
-
-```bash
-npx -y codex-lark-bridge run
-```
-
-从 GitHub 直接运行：
+从 GitHub 直接运行（当前推荐，npm 包尚未发布）：
 
 ```bash
 npx -y github:qingxi2058/codex-lark-bridge run
+```
+
+从 npm（发布后可用）：
+
+```bash
+npx -y codex-lark-bridge run
 ```
 
 第一次运行会出现二维码。用飞书扫码，按提示创建或绑定 bot。完成后，在飞书里私聊这个 bot 就可以用了。
@@ -56,7 +56,33 @@ npx -y github:qingxi2058/codex-lark-bridge run
 
 ## 常用命令
 
+当前 npm 包尚未发布时，推荐继续用 GitHub 直跑：
+
 启动：
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge run
+```
+
+使用自定义配置：
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge run --config ~/.lark-channel/my-codex-bot.json
+```
+
+查看运行中的 bridge：
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge ps
+```
+
+停止某个进程：
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge kill 1
+```
+
+npm 包发布后，也可以使用短命令：
 
 ```bash
 codex-lark-bridge run
@@ -85,19 +111,19 @@ codex-lark-bridge kill 1
 发文字：
 
 ```bash
-codex-lark-bridge upload --text "已完成"
+npx -y github:qingxi2058/codex-lark-bridge upload --text "已完成"
 ```
 
 发图片：
 
 ```bash
-codex-lark-bridge upload --image ./screenshot.png --text "预览图"
+npx -y github:qingxi2058/codex-lark-bridge upload --image ./screenshot.png --text "预览图"
 ```
 
 发到指定聊天：
 
 ```bash
-codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
+npx -y github:qingxi2058/codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
 ```
 
 如果不传 `--chat-id`，默认发到本机 lark-channel 日志里最近出现的聊天。

@@ -69,17 +69,15 @@ codex --version
 
 ### Step 3：引导安装启动
 
-一条命令启动：
+当前先用 GitHub 直跑，npm 包发布后再用短命令：
 
 ```bash
-# 从 npm（推荐，稳定版）
-npx -y codex-lark-bridge run
-
-# 从 GitHub 直接运行（获取最新代码）
+# 从 GitHub 直接运行（当前推荐，npm 包尚未发布）
 npx -y github:qingxi2058/codex-lark-bridge run
-```
 
-两种方式效果一样，npm 版本更稳定，GitHub 版本跟最新提交。
+# 从 npm（发布后可用）
+npx -y codex-lark-bridge run
+```
 
 第一次运行会弹出二维码。引导用户：
 
@@ -113,6 +111,24 @@ Allowed chats：允许响应的群
 
 ### Step 5：常用命令速查
 
+当前 npm 包尚未发布时，用 GitHub 直跑命令：
+
+```bash
+# 启动 bridge
+npx -y github:qingxi2058/codex-lark-bridge run
+
+# 使用自定义配置文件
+npx -y github:qingxi2058/codex-lark-bridge run --config ~/.lark-channel/my-codex-bot.json
+
+# 查看运行中的 bridge 进程
+npx -y github:qingxi2058/codex-lark-bridge ps
+
+# 停止某个进程（用 ps 查到的编号）
+npx -y github:qingxi2058/codex-lark-bridge kill 1
+```
+
+等 npm 包发布后，才使用下面这些短命令：
+
 ```bash
 # 启动 bridge
 codex-lark-bridge run
@@ -133,16 +149,16 @@ Codex 完成任务后，可以用命令把结果发回飞书：
 
 ```bash
 # 发文字
-codex-lark-bridge upload --text "已完成"
+npx -y github:qingxi2058/codex-lark-bridge upload --text "已完成"
 
 # 发图片
-codex-lark-bridge upload --image ./screenshot.png --text "预览图"
+npx -y github:qingxi2058/codex-lark-bridge upload --image ./screenshot.png --text "预览图"
 
 # 发文件
-codex-lark-bridge upload --file ./report.md
+npx -y github:qingxi2058/codex-lark-bridge upload --file ./report.md
 
 # 发到指定聊天（同时跑多个 bot 时建议显式指定）
-codex-lark-bridge upload --chat-id oc_xxx --text "已完成"
+npx -y github:qingxi2058/codex-lark-bridge upload --chat-id oc_xxx --text "已完成"
 ```
 
 如果同时跑了 Claude Code 和 Codex 两个 bot，建议加 `--chat-id`，避免发错聊天。
@@ -153,7 +169,6 @@ codex-lark-bridge upload --chat-id oc_xxx --text "已完成"
 
 - 报什么错（完整错误信息）
 - 在哪一步出的问题（安装 / 扫码 / 发消息 / 上传）
-- 用的是 npm 版本还是 GitHub 版本
 
 常见问题：
 
@@ -162,7 +177,7 @@ codex-lark-bridge upload --chat-id oc_xxx --text "已完成"
 → 用 `nvm install 20 && nvm use 20` 或去 nodejs.org 下载最新 LTS 版本
 
 **二维码扫了没反应**
-→ 检查飞书应用是否已创建，或尝试重新运行 `codex-lark-bridge run`
+→ 检查飞书应用是否已创建，或尝试重新运行 GitHub 直跑启动命令
 
 **bot 不响应消息**
 → 群聊里需要 @bot 才会响应；检查 `/config` 里的 `Allowed chats` 和 `Allowed users`

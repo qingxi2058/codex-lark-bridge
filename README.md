@@ -27,16 +27,16 @@ codex --version
 
 ## One Command Start
 
-From npm, after publishing:
-
-```bash
-npx -y codex-lark-bridge run
-```
-
-From GitHub:
+From GitHub (recommended, npm not yet published):
 
 ```bash
 npx -y github:qingxi2058/codex-lark-bridge run
+```
+
+From npm (after publishing):
+
+```bash
+npx -y codex-lark-bridge run
 ```
 
 The first run opens a QR code setup flow. Scan it with Feishu/Lark, create or select a bot, then message the bot in Feishu/Lark.
@@ -55,7 +55,33 @@ Do this before adding the bot to a large group.
 
 ## Usage
 
+While the npm package is not published, keep using the GitHub runner:
+
 Run the bridge:
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge run
+```
+
+Use a custom config path:
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge run --config ~/.lark-channel/my-codex-bot.json
+```
+
+List bridge processes:
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge ps
+```
+
+Stop a bridge process:
+
+```bash
+npx -y github:qingxi2058/codex-lark-bridge kill 1
+```
+
+After npm publishing, the short command is also available:
 
 ```bash
 codex-lark-bridge run
@@ -84,19 +110,19 @@ codex-lark-bridge kill 1
 Send text to the latest chat seen in local lark-channel logs:
 
 ```bash
-codex-lark-bridge upload --text "Done."
+npx -y github:qingxi2058/codex-lark-bridge upload --text "Done."
 ```
 
 Send an image:
 
 ```bash
-codex-lark-bridge upload --image ./screenshot.png --text "Preview"
+npx -y github:qingxi2058/codex-lark-bridge upload --image ./screenshot.png --text "Preview"
 ```
 
 Send to a specific chat:
 
 ```bash
-codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
+npx -y github:qingxi2058/codex-lark-bridge upload --chat-id oc_xxx --file ./report.md
 ```
 
 If you run both Claude Code and Codex bridges on the same machine, prefer `--chat-id` so the upload target is explicit.
